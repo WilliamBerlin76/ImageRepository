@@ -1,11 +1,15 @@
 // Update with your config settings.
+require('dotenv').config();
 
 module.exports = {
 
   development: {
-    client: 'sqlite3',
+    client: 'pg',
     connection: {
-      filename: './database/image_repo.db3'
+      host: "localhost",
+      database: process.env.DB_DEV_DATABASE,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD
     },
     useNullAsDefault: true,
     migrations: {
