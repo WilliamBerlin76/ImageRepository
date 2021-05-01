@@ -3,7 +3,8 @@ const fsPromises = require("fs").promises;
 
 module.exports = {
     addImageToUser,
-    getUserImages
+    getUserImages,
+    deleteImages
 }
 
 async function addImageToUser(userId, images){
@@ -31,8 +32,20 @@ async function getUserImages(userId){
         
         let buf = Buffer.from(filedata);
         let base64 = buf.toString('base64');
-        response.push({ name: image.display_name, base64 });
+        response.push({ id: image.id, name: image.display_name, base64 });
     }
       
     return response;
 };
+
+async function deleteImages(userId, imageIds){
+    let images = await db("images").whereIn("id", imageIds);
+    
+    for (let image of images){
+        await fsPromises.unlink(image.file_path);
+    }
+
+    return db("images")
+            .delete()
+            .whereIn("id", imageIds);
+}

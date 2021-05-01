@@ -1,12 +1,13 @@
 const router = require("express").Router();
 const multer = require("multer");
-const path = require("path")
+const restrictedMiddleware = require("../middleware/restrictedMiddleware");
 
 const assetName = require("../helpers/assetName");
 
 const { 
     addImageToUser,
-    getUserImages
+    getUserImages,
+    deleteImages
 } = require("../models/images-model");
 
 const storage = multer.diskStorage({
@@ -26,8 +27,9 @@ const upload = multer({
     }
 }).array("imageFile", 3);
 
-// Uploads images for a user
+// Uploads images for a user by id
 router.post("/:user_id/add-images", 
+    restrictedMiddleware,
     upload,
     (req, res) => {
         addImageToUser(req.params.user_id, req.files)
@@ -41,7 +43,11 @@ router.post("/:user_id/add-images",
     },
 );
 
-router.get("/:user_id/get-images", (req, res) => {
+// Gets images for a user by id
+router.get(
+    "/:user_id/get-images", 
+    restrictedMiddleware,
+    (req, res) => {
     getUserImages(req.params.user_id)
         .then((images) => {
             res.status(200).json({ images: images });
@@ -52,4 +58,19 @@ router.get("/:user_id/get-images", (req, res) => {
         });
 });
 
+// Removes images TODO
+// Making this a POST and not a delete because the request body will be used
+router.post(
+    "/:user_id/delete-images", 
+    restrictedMiddleware,
+    (req, res) => {
+        deleteImages(req.params.user_id, req.body.imageIds)
+        .then(() => {
+            res.status(200).json({ message: "successfully delted the images" });
+        })
+        .catch(err => {
+            res.status(500).json({ message: "the server failed to remove the images" })
+        })
+    }
+);
 module.exports = router;
