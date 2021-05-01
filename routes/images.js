@@ -64,12 +64,12 @@ router.post(
     "/:user_id/delete-images", 
     restrictedMiddleware,
     (req, res) => {
-        deleteImages(req.params.user_id, req.body.imageIds)
+        deleteImages(req.userObj.id, req.body.imageIds)
         .then(() => {
             res.status(200).json({ message: "successfully delted the images" });
         })
         .catch(err => {
-            res.status(500).json({ message: "the server failed to remove the images" })
+            res.status(500).json({ message: "the server failed to remove the images", error: err.toString() })
         })
     }
 );
