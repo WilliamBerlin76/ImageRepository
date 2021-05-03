@@ -66,7 +66,7 @@ router.post(
     (req, res) => {
         deleteImages(req.userObj.id, req.body.imageIds)
         .then(() => {
-            res.status(200).json({ message: "successfully delted the images" });
+            res.status(200).json({ message: "successfully deleted the images" });
         })
         .catch(err => {
             res.status(500).json({ message: "the server failed to remove the images", error: err.toString() })

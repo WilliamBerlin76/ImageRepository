@@ -5,7 +5,7 @@ module.exports = {
     addImageToUser,
     getUserImages,
     deleteImages
-}
+};
 
 async function addImageToUser(userId, images){
     
@@ -43,7 +43,7 @@ async function deleteImages(userId, imageIds){
     
     for (let image of images){
         if (userId !== image.user_id){
-            throw new Error("that image does not belong to this user")
+            throw new Error("that image does not belong to this user");
         }
         await fsPromises.unlink(image.file_path);
     }
