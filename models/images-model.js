@@ -20,7 +20,7 @@ async function addImageToUser(userId, images){
             .insert(imageInfo, "id");
     }
     return; 
-};
+}
 
 async function getUserImages(userId){
     const images = await db("images")
@@ -36,7 +36,7 @@ async function getUserImages(userId){
     }
       
     return response;
-};
+}
 
 async function deleteImages(userId, imageIds){
     let images = await db("images").whereIn("id", imageIds);
