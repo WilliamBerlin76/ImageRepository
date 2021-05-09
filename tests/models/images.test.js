@@ -1,4 +1,3 @@
-const { intersect } = require("../../config/db-config.js");
 const db = require("../../config/db-config.js");
 const fsPromises = require("fs").promises;
 
@@ -43,9 +42,8 @@ describe("IMAGES-MODEL", () => {
             }];
             const data = { 
                 fieldname: 'file',
-                originalname: '20190221_171825.jpg',
-                mimetype: 'image/jpeg',
-                size: 5173060 
+                originalname: '20190221_171825.png',
+                mimetype: 'image/png',
             };
             // create files so that the deleteImages function works
             await fsPromises.writeFile("uploads/testFileName.png", data, (err) => {
@@ -66,7 +64,42 @@ describe("IMAGES-MODEL", () => {
             await deleteImages(1, [1,2])
             const deletedImgs = await db("images");
             expect(deletedImgs).toHaveLength(0)
+        });
+    });
 
+    describe("getUserImages", () => {
+        it ("should retrieve the user's images by user id", async () => {
+            const testImage = [{
+                originalname: "testimg.png",
+                filename: "testFileName.png",
+            }];
+            const testImage2 = [{
+                originalname: "testimg2.png",
+                filename: "testFileName2.png",
+            }];
+            const data = { 
+                fieldname: 'file',
+                originalname: '20190221_171825.png',
+                mimetype: 'image/png',
+            };
+            // create files so that they can be retrieved
+            await fsPromises.writeFile("uploads/testFileName.png", data, (err) => {
+                if (err){
+                    console.log(err);
+                }
+            });
+            await fsPromises.writeFile("uploads/testFileName2.png", data, (err) => {
+                if (err){
+                    console.log(err);
+                }
+            });
+            await addImageToUser(1, testImage);
+            await addImageToUser(1, testImage2);
+            const images = await getUserImages(1);
+            expect(images).toHaveLength(2)
+            // remove images from storage
+            await fsPromises.unlink("uploads/testFileName.png")
+            await fsPromises.unlink("uploads/testFileName2.png")
         });
     });
 });
