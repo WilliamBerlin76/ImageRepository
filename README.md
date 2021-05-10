@@ -13,7 +13,7 @@
 
 
 ## Instructions for running locally:
- - Clone this repository on your local machine
+ - clone this repository on your local machine
  - create a `.env` file with the following variables:
     ```
     PORT=5000
@@ -24,5 +24,6 @@
     DB_DEV_DATABASE=imageRepository
     ```
  - use `pgAdmin` to create a local database called imageRepository with the same DB credentials from the `.env` file 
+ - run `knex migrate:latest` to create the tables in the Postgres database
  - run `npm install` to install all dependencies
  - run `npm run server` or `npm start` to run the server
